@@ -23,6 +23,7 @@ Bienvenido a mi **portfolio de ciberseguridad**. Aquí encontrarás los trabajos
 - Descripción: Implementación de medidas de seguridad en sistemas y redes para reducir la superficie de ataque.  
 - Proyectos:
   - [Codelab Bastionado BIOS/UEFI - Lenovo Legion 7](Proyecto-1.1/index.html)
+  - [Bastionado del Arranque en Debian](Proyecto-1.2/index.html)
 
 ---
 
