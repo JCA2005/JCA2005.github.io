@@ -1,0 +1,134 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>CodeLab: Bastionar la BIOS/UEFI (Lenovo Legion 7-16ACHg6 - simulador)</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="Proyecto-1.1"
+                  title="CodeLab: Bastionar la BIOS/UEFI (Lenovo Legion 7-16ACHg6 - simulador)"
+                  environment="web"
+                  feedback-link="https://github.com/JCA2005">
+    
+      <google-codelab-step label="Objetivos" duration="0">
+        <ul>
+<li>Incrementar la seguridad del proceso de arranque (BIOS/UEFI).</li>
+<li>Configurar contraseñas adecuadas (administrador y usuario / Power-On).</li>
+<li>Evitar arranques desde dispositivos externos.</li>
+<li>Establecer un orden de arranque seguro.</li>
+<li>Activar Secure Boot y TPM (si procede).</li>
+<li>Documentar la configuración y explicar mitigaciones contra Clear CMOS.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Requisitos previos" duration="0">
+        <ol type="1">
+<li>Cuenta en GitHub (para publicar la guía en GitHub Pages).</li>
+<li>Acceso al simulador de Lenovo: https://download.lenovo.com/bsco/index.html#/.</li>
+<li>Un navegador moderno (Chrome/Edge/Firefox).</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Nota importante sobre el simulador" duration="0">
+        <p>El simulador de Lenovo es una herramienta web interactiva. Busca el modelo <strong>Legion 7-16ACHg6 (82N6)</strong> o un modelo equivalente si no aparece exactamente.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso a paso" duration="0">
+        <h2 is-upgraded>1) Abrir el simulador y seleccionar modelo</h2>
+<ol type="1">
+<li>Abre: <code>https://download.lenovo.com/bsco/index.html#/</code></li>
+<li>Busca el modelo <strong>Legion 7-16ACHg6</strong> o el código <strong>82N6</strong>.</li>
+<li>Selecciona el equipo en la lista.</li>
+</ol>
+<h2 is-upgraded>2) Entrar al menú principal de la UEFI/BIOS</h2>
+<ol type="1">
+<li>Haz clic en la pantalla del BIOS/UEFI.</li>
+<li>Localiza las pestañas: <strong>Main</strong>, <strong>Security</strong>, <strong>Boot</strong>, <strong>Exit</strong>.</li>
+</ol>
+<h2 is-upgraded>3) Establecer contraseña de administrador</h2>
+<ol type="1">
+<li>En <strong>Security</strong>, busca <strong>Set Administrator Password</strong>.</li>
+<li>Introduce una contraseña robusta (mínimo 12 caracteres, mezcla de mayúsculas, minúsculas, números y símbolos): qkw0702ME(P&gt;.</li>
+</ol>
+<p class="image-container"><img alt="Captura 1" src="img\\b1bc34beadc60c1c.png"></p>
+<h2 is-upgraded>4) Establecer contraseña de arranque</h2>
+<ol type="1">
+<li>En <strong>Security</strong> o <strong>Boot</strong>, busca <strong>Set User Password</strong>, <strong>Power-On Password</strong> o <strong>HDD Password</strong>.</li>
+<li>Introduce la contraseña según tu política.</li>
+</ol>
+<h2 is-upgraded>5) Deshabilitar arranque desde dispositivos externos</h2>
+<ol type="1">
+<li>En <strong>Boot</strong>, busca <strong>USB Boot</strong>.</li>
+<li>Cambia a <strong>Disabled</strong>.</li>
+</ol>
+<p class="image-container"><img alt="Captura 2" src="img\\b3df7c06b9ac9682.png"></p>
+<h2 is-upgraded>6) Establecer orden de arranque seguro</h2>
+<ol type="1">
+<li>En <strong>Boot Mode</strong>, selecciona <strong>Windows Boot Manager</strong> como principal.</li>
+<li>Ponemos <strong>EFI PXE Network</strong> como segundo.</li>
+</ol>
+<p class="image-container"><img alt="Captura 3" src="img\\7ce8fb2eabd2e5f9.png"></p>
+<h2 is-upgraded>7) Habilitar Secure Boot</h2>
+<ol type="1">
+<li>En <strong>Security</strong>, busca <strong>Secure Boot</strong> y habilítalo.</li>
+</ol>
+<p class="image-container"><img alt="Captura 4" src="img\\7af6ac1ebf73e8bc.png"></p>
+<h2 is-upgraded>8) Habilitar AMD Platform Security Processor</h2>
+<ol type="1">
+<li>Ve a <strong>Security</strong> y busca <strong>AMD Platform Security Processor</strong> y actívalo.</li>
+</ol>
+<p class="image-container"><img alt="Captura 5" src="img\\b8046aa243ada8c9.png"></p>
+<h2 is-upgraded>9) Desactivar Legacy/CSM</h2>
+<ol type="1">
+<li>En <strong>Boot</strong>, busca <strong>Legacy Boot</strong> y establece <strong>Disabled</strong>.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Checklist" duration="0">
+        <ul>
+<li>[ ] Contraseña Power-On</li>
+<li>[ ] Contraseña Supervisor</li>
+<li>[ ] Evitar arranques externos</li>
+<li>[ ] Orden de arranque seguro</li>
+<li>[ ] AMD Platform Security Processor</li>
+<li>[ ] Mitigaciones frente a Clear CMOS y copias de seguridad</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
