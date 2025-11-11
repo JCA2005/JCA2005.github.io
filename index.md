@@ -22,7 +22,7 @@ Bienvenido a mi **portfolio de ciberseguridad**. Aquí encontrarás los trabajos
 ### 2. Bastionado de Redes y Sistemas
 - Descripción: Implementación de medidas de seguridad en sistemas y redes para reducir la superficie de ataque.  
 - Proyectos:
-  - [Codelab Bastionado BIOS/UEFI - Lenovo Legion 7](CodeLab_Bastionado_BIOS_UEFI.md)
+  - [Codelab Bastionado BIOS/UEFI - Lenovo Legion 7](Proyecto-1.1.md)
 
 ---
 
