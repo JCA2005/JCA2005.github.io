@@ -1,0 +1,187 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Proyecto 1.2 - Bastionado del Arranque en Debian</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="Proyecto-1.2"
+                  title="Proyecto 1.2 - Bastionado del Arranque en Debian"
+                  environment="web"
+                  feedback-link="https://github.com/JCA2005">
+    
+      <google-codelab-step label="Introducción" duration="0">
+        <p>En este proyecto aprenderemos a proteger el proceso de arranque de un sistema Debian mediante la configuración segura del gestor de arranque <strong>GRUB 2</strong>.</p>
+<p>Esto permitirá evitar que un usuario no autorizado pueda acceder al sistema modificando opciones en el arranque, iniciando sesiones de recuperación o editando parámetros del kernel.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Requisitos previos" duration="0">
+        <ul>
+<li>Máquina virtual con <strong>Debian</strong> instalado.</li>
+<li>Acceso a una cuenta con privilegios <code>root</code> o uso de <code>sudo</code>.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 1: Actualizar el sistema" duration="0">
+        <p>Antes de empezar, actualiza el sistema:</p>
+<pre><code language="language-bash" class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+</code></pre>
+<p class="image-container"><img alt="Captura 1" src="img\\153e41f00dc7d449.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 2: Realizar una copia de seguridad de GRUB" duration="0">
+        <p>Antes de realizar cambios es recomendable tener una copia del archivo de configuración actual.</p>
+<pre><code language="language-bash" class="language-bash">sudo cp /boot/grub/grub.cfg /boot/grub/grub.cfg.bak
+</code></pre>
+<p>Esto nos permitirá restaurarlo si algo sale mal.</p>
+<p class="image-container"><img alt="Captura 8" src="img\\aa8f5d0bdf2b9b4a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 3: Configurar una contraseña para GRUB" duration="0">
+        <p>La contraseña impedirá que un usuario acceda al modo de recuperación o modifique parámetros del kernel durante el arranque.</p>
+<h2 is-upgraded>Generar la contraseña cifrada</h2>
+<pre><code language="language-bash" class="language-bash">sudo grub-mkpasswd-pbkdf2
+</code></pre>
+<p>El sistema pedirá una contraseña dos veces y generará un hash similar a:</p>
+<pre><code>PBKDF2 hash: grub.pbkdf2.sha512.10000.XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+</code></pre>
+<p>Copia ese hash.</p>
+<p class="image-container"><img alt="Captura 2" src="img\\c660cdb00677c6d8.png"></p>
+<h2 is-upgraded>Editar la configuración personalizada de GRUB</h2>
+<pre><code language="language-bash" class="language-bash">sudo nano /etc/grub.d/40_custom
+</code></pre>
+<p>Añadir las siguientes líneas al final del archivo:</p>
+<pre><code>set superusers=&#34;root&#34;
+password_pbkdf2 root &lt;PEGAREMOS AQUI EL HASH DE ANTES&gt;
+</code></pre>
+<p>Guardar con: <code>CTRL + O</code>, salir con: <code>CTRL + X</code>.</p>
+<p class="image-container"><img alt="Captura 3" src="img\\a3d9726b1c20d116.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 4: Aplicar los cambios en GRUB" duration="0">
+        <pre><code language="language-bash" class="language-bash">sudo update-grub
+</code></pre>
+<p class="image-container"><img alt="Captura 4" src="img\\42de5a66a17572d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 5: Restringir permisos del archivo" duration="0">
+        <pre><code language="language-bash" class="language-bash">sudo chmod 700 /etc/grub.d/40_custom
+</code></pre>
+<p>Esto hace que solo root pueda editar la configuración de GRUB.</p>
+<p class="image-container"><img alt="Captura 5" src="img\\6c0ec1cfa931859d.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 5: Ocultar el menú de GRUB" duration="0">
+        <p>Si únicamente tienes un sistema operativo instalado, puedes ocultar el menú:</p>
+<pre><code language="language-bash" class="language-bash">sudo nano /etc/default/grub
+</code></pre>
+<p>Modificar la línea:</p>
+<pre><code>GRUB_TIMEOUT=5
+</code></pre>
+<p>Por:</p>
+<pre><code>GRUB_TIMEOUT=0
+</code></pre>
+<p>Añadiremos debajo la siguiente línea:</p>
+<pre><code>GRUB_HIDDEN_TIMEOUT=0
+</code></pre>
+<p class="image-container"><img alt="Captura 6" src="img\\fbb5da84d9a8eb0d.png"></p>
+<p>Guardar y aplicar cambios nuevamente:</p>
+<pre><code language="language-bash" class="language-bash">sudo update-grub
+</code></pre>
+<p class="image-container"><img alt="Captura 7" src="img\\65707d6ae196f159.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 6: Accedemos al DNU GRUB" duration="0">
+        <p>Reiniciamos la máquina virtual y pulsamos seguidamente la letra e:</p>
+<pre><code language="language-bash" class="language-bash">sudo reboot
+</code></pre>
+<p class="image-container"><img alt="Captura 9" src="img\\85ff6c0cafa6fd87.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 7: Mokutil" duration="0">
+        <p>Instalamos mokutil para gestionar las claves de arranque seguro:</p>
+<pre><code language="language-bash" class="language-bash">sudo apt install mokutil -y
+</code></pre>
+<p class="image-container"><img alt="Captura 10" src="img\\9843297f478cd1b9.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 8: tpm2-tools" duration="0">
+        <p>Instalamos el conjunto de herramientas tpm2-tools, para usar y administrar el chip TPM del equipo</p>
+<pre><code language="language-bash" class="language-bash">sudo apt install tpm2-tools -y
+</code></pre>
+<p class="image-container"><img alt="Captura 11" src="img\\a3ccc6ef9dc047c1.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 9: dmesg" duration="0">
+        <p>muestra mensajes del sistema TPM</p>
+<pre><code language="language-bash" class="language-bash">dmesg | grep -i tpm
+</code></pre>
+<p class="image-container"><img alt="Captura 12" src="img\\ebb4750e996a0b77.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 10: tpm2_getrandom" duration="0">
+        <p>Genera 8 bytes de números aleatorios</p>
+<pre><code language="language-bash" class="language-bash">sudo tpm2_getrandom 8
+</code></pre>
+<p class="image-container"><img alt="Captura 13" src="img\\3a1554b6fb49a65a.png"></p>
+<p>Esto quiere decir que el TPM no está disponible, o bien el equipo no lo tiene o está desactivado en la BIOS/UEFI, normalmente no traen TPM activado por defecto.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Fin del documento." duration="0">
+        
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
